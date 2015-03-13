@@ -44,7 +44,15 @@ define motd::register_profiles($profiles="") {
 define motd::register_accounts($accounts="") {
   concat::fragment{ "motd_accounts_fragment_$name":
     target  => '/etc/motd',
-    order   => '30',
+    order   => '40',
     content => template("motd/accounts.erb"),
+  }
+}
+
+define motd::register_facilities($facilities="") {
+  concat::fragment{ "motd_facilities_fragment_$name":
+    target  => '/etc/motd',
+    order   => '30',
+    content => template("motd/facilities.erb"),
   }
 }
