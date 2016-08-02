@@ -12,6 +12,11 @@ class motd {
     content => "\nThis host is managed via Puppet, and has the following role:\n\n",
     order   => '01'
   }
+  concat::fragment{ 'motd_site_header':
+    target  => $motd,
+    content => "\nThis host belongs to the site:\n",
+    order   => '11'
+  }
   concat::fragment{ 'motd_profile_header':
     target  => $motd,
     content => "\nThe following profiles belong to that role:\n\n",
@@ -30,6 +35,20 @@ define motd::register_role($content="") {
     target  => '/etc/motd',
     order   => '10',
     content => "   -- $hostrole\n"
+  }
+}
+
+define motd::register_site($content="") {
+  if $content == "" {
+    $sitename = $name
+  } else {
+    $sitename = $content
+  }
+
+  concat::fragment{ "motd_site_fragment_$name":
+    target  => '/etc/motd',
+    order   => '12',
+    content => "   -- $sitename\n"
   }
 }
 
